@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>COVID-19 - Países</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+    .brasil {
+      background-color: #d1ecf1; /* azul claro */
+      font-weight: bold;
+    }
+    caption {
+      font-size: 1.5em;
+      margin: 1em 0;
+    }
+  </style>
+</head>
+<body>
+  <table id="tabelaPaises">
+    <caption>COVID-19 nos Países</caption>
+    <thead>
+      <tr>
+        <th>País</th>
+        <th>Casos Confirmados</th>
+        <th>Mortes</th>
+        <th>Recuperados</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function carregarPaises() {
+      const resposta = await fetch('https://covid19-brazil-api.now.sh/api/report/v1/countries');
+      const json = await resposta.json();
+      const dados = json.data;
+
+      const corpoTabela = document.querySelector("#tabelaPaises tbody");
+
+      dados.forEach(pais => {
+        const linha = document.createElement("tr");
+        if (pais.country.toLowerCase() === "brazil") {
+          linha.classList.add("brasil");
+        }
+        linha.innerHTML = `
+          <td>${pais.country}</td>
+          <td>${pais.cases}</td>
+          <td>${pais.deaths}</td>
+          <td>${pais.recovered}</td>
+        `;
+        corpoTabela.appendChild(linha);
+      });
+    }
+
+    carregarPaises();
+  </script>
+</body>
+</html>
